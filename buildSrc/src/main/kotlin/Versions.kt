@@ -1,6 +1,8 @@
 object Versions {
     const val hilt = "2.48"
     const val coreKtx = "1.9.20"
+    const val gson = "2.10.1"
+    const val material = "1.11.0"
     const val lifecycle = "2.3.1"
     const val appcompat = "1.4.0"
     const val navigation = "2.7.6"

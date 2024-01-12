@@ -66,26 +66,17 @@ android {
 
 dependencies {
     implementation(Libraries.coreKtx)
-    implementation(Libraries.lifecycle)
     implementation(Libraries.appcompat)
-
-    // Navigation
-    implementation(Libraries.navigationUiKtx)
 
     // Dagger with hilt
     implementation(Libraries.hiltAndroid)
     kapt(Libraries.hiltAndroidCompiler)
 
-    // Networking with Retrofit
-    implementation(Libraries.retrofit)
-    implementation(Libraries.retrofitGsonConverter)
-    implementation(Libraries.okhttp)
-    implementation(Libraries.okhttpLoggingInterceptor)
+    implementation(project(Modules.common))
+    implementation(project(Modules.data))
+    implementation(project(Modules.userFeature))
 
     // Compose
-    implementation(Libraries.composeUi)
-    debugImplementation(Libraries.composeUiRuntime)
-    implementation (Libraries.materialCompose)
     implementation(Libraries.hiltNavigationCompose)
 
     // test libraries
@@ -93,9 +84,4 @@ dependencies {
     testImplementation (Libraries.mockitoCore)
     testImplementation (Libraries.mockitoInline)
     testImplementation (Libraries.coroutineTest)
-}
-
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
 }
