@@ -16,7 +16,8 @@ dependencyResolutionManagement {
 rootProject.name = "LloydDemoApplication"
 include(":app")
 include(":network")
-include(":common")
 include(":user_feature")
 include(":data")
 include(":domain")
+include(":common:core")
+include(":common:ui")

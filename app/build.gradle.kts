@@ -15,8 +15,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
 
@@ -35,7 +33,7 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix  = ".debug"
+            applicationIdSuffix = ".debug"
         }
 
         release {
@@ -72,16 +70,9 @@ dependencies {
     implementation(Libraries.hiltAndroid)
     kapt(Libraries.hiltAndroidCompiler)
 
-    implementation(project(Modules.common))
-    implementation(project(Modules.data))
+    implementation(project(Modules.commonCore))
     implementation(project(Modules.userFeature))
 
     // Compose
     implementation(Libraries.hiltNavigationCompose)
-
-    // test libraries
-    testImplementation (Libraries.junit)
-    testImplementation (Libraries.mockitoCore)
-    testImplementation (Libraries.mockitoInline)
-    testImplementation (Libraries.coroutineTest)
 }

@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.domain.model.User
 
 @Composable
-fun UserItem(user: User?, onItemClick: () -> Unit) {
+internal fun UserItem(user: User?, onItemClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

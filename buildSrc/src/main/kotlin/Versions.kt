@@ -11,7 +11,7 @@ object Versions {
     const val compose = "1.5.4"
     const val hiltNavigationCompose = "1.1.0"
     const val junit = "4.13.2"
-    const val mockito = "3.12.4"
+    const val mockk = "1.12.0"
     const val coroutineTest = "1.6.4"
 }
 

@@ -11,8 +11,6 @@ android {
 
     defaultConfig {
         minSdk = 24
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -46,19 +44,19 @@ dependencies {
     // Compose
     implementation(Libraries.composeUi)
     debugImplementation(Libraries.composeUiRuntime)
-    implementation (Libraries.materialCompose)
+    implementation(Libraries.materialCompose)
     implementation(Libraries.hiltNavigationCompose)
 
     // Hilt
     implementation(Libraries.hiltAndroid)
     kapt(Libraries.hiltAndroidCompiler)
 
-    implementation(project(Modules.common))
-    implementation(project(Modules.domain))
+    implementation(project(Modules.commonUI))
+    implementation(project(Modules.commonCore))
+    implementation(project(Modules.data))
 
     // test libraries
-    testImplementation (Libraries.junit)
-    testImplementation (Libraries.mockitoCore)
-    testImplementation (Libraries.mockitoInline)
-    testImplementation (Libraries.coroutineTest)
+    testImplementation(Libraries.junit)
+    testImplementation(Libraries.coroutineTest)
+    testImplementation(Libraries.mockk)
 }

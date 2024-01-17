@@ -2,8 +2,5 @@
     <string name="app_name">user_feature</string>
     <string name="home_screen_title">Home Screen</string>
     <string name="user_detail_screen">User Detail Screen</string>
-    <string name="default_error">Something went wrong</string>
-    <string name="unknown_error">Unknown error</string>
-    <string name="error_internet_connection">Check your internet connection</string>
-    <string name="error_title_text">Error</string>
+    <string name="default_error">Something Went Wrong</string>
 </resources>

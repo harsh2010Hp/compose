@@ -1,9 +1,14 @@
 package com.example.network.service
 
-import com.example.network.model.UserResponse
+import com.example.network.dto.UserInfoDto
+import com.example.network.dto.UserDto
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface ApiService {
     @GET("users")
-    suspend fun getUsers(): List<UserResponse>
+    suspend fun getUsers(): List<UserDto>
+
+    @GET("users/{id}")
+    suspend fun getUserInfo(@Path("id")userId: String?): UserInfoDto
 }

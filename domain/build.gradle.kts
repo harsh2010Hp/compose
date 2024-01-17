@@ -11,8 +11,6 @@ android {
 
     defaultConfig {
         minSdk = 24
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -35,15 +33,14 @@ android {
 
 dependencies {
 
-    implementation(Libraries.coreKtx)
-    implementation(project(Modules.common))
+    implementation(project(Modules.commonCore))
 
     // Dagger with hilt
     implementation(Libraries.hiltAndroid)
     kapt(Libraries.hiltAndroidCompiler)
 
     // test libraries
-    testImplementation (Libraries.junit)
-    testImplementation (Libraries.mockitoCore)
-    testImplementation (Libraries.mockitoInline)
+    testImplementation(Libraries.junit)
+    testImplementation(Libraries.coroutineTest)
+    testImplementation(Libraries.mockk)
 }

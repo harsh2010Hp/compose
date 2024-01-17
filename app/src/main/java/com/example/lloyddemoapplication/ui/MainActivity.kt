@@ -3,8 +3,8 @@ package com.example.lloyddemoapplication.ui
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import com.example.common.analytics.Analytics
-import com.example.common.analytics.AnalyticsImpl
+import com.example.core.analytics.Analytics
+import com.example.core.analytics.AnalyticsImpl
 import com.example.user_feature.presenter.UserFlowNavigation
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -24,13 +24,13 @@ object Libraries {
     val materialCompose by lazy { "androidx.compose.material:material:${Versions.compose}" }
     val hiltNavigationCompose by lazy { "androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigationCompose}" }
     val junit by lazy { "junit:junit:${Versions.junit}" }
-    val mockitoCore by lazy { "org.mockito:mockito-core:${Versions.mockito}" }
-    val mockitoInline by lazy { "org.mockito:mockito-inline:${Versions.mockito}" }
+    val mockk by lazy { "io.mockk:mockk:${Versions.mockk}" }
     val coroutineTest by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutineTest}" }
 }
 
 object Modules {
-    const val common = ":common"
+    const val commonCore = ":common:core"
+    const val commonUI = ":common:ui"
     const val data = ":data"
     const val domain = ":domain"
     const val network = ":network"

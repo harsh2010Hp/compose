@@ -9,8 +9,6 @@ android {
 
     defaultConfig {
         minSdk = 24
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -29,23 +27,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures {
-        buildConfig = true
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
-    }
 }
 
 dependencies {
 
     implementation(Libraries.coreKtx)
-    implementation(Libraries.material)
-    implementation (Libraries.gson)
-
-    // Compose
-    implementation(Libraries.composeUi)
-    debugImplementation(Libraries.composeUiRuntime)
-    implementation (Libraries.materialCompose)
 }
