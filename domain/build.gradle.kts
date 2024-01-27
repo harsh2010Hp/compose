@@ -43,4 +43,5 @@ dependencies {
     testImplementation(Libraries.junit)
     testImplementation(Libraries.coroutineTest)
     testImplementation(Libraries.mockk)
+    testImplementation(Libraries.gson)
 }

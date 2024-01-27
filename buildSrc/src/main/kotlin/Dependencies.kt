@@ -7,10 +7,10 @@ object BuildPlugins {
 }
 
 object Libraries {
-    val gson by lazy {"com.google.code.gson:gson:${Versions.gson}"}
+    val gson by lazy { "com.google.code.gson:gson:${Versions.gson}" }
     val coreKtx by lazy { "androidx.core:core-ktx:${Versions.coreKtx}" }
     val lifecycle by lazy { "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}" }
-    val material by lazy {"com.google.android.material:material:${Versions.material}"}
+    val material by lazy { "com.google.android.material:material:${Versions.material}" }
     val appcompat by lazy { "androidx.appcompat:appcompat:${Versions.appcompat}" }
     val navigationUiKtx by lazy { "androidx.navigation:navigation-ui-ktx:${Versions.navigation}" }
     val hiltAndroid by lazy { "com.google.dagger:hilt-android:${Versions.hilt}" }

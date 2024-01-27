@@ -17,39 +17,48 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class ApplicationModule {
+object ApplicationModule {
+
     @Provides
     @Named("baseUrl")
-    fun baseUrl() = "https://jsonplaceholder.typicode.com/"
+    fun provideBaseUrl(): String = "https://jsonplaceholder.typicode.com/"
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient = if (BuildConfig.DEBUG) {
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .build()
-    } else OkHttpClient
-        .Builder()
-        .build()
+        return loggingInterceptor
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
+        OkHttpClient.Builder().apply {
+            if (BuildConfig.DEBUG) {
+                addInterceptor(loggingInterceptor)
+            }
+        }.build()
+
+    @Provides
+    @Singleton
+    fun provideRetrofitBuilder(okHttpClient: OkHttpClient): Retrofit.Builder =
+        Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
 
     @Provides
     @Singleton
     fun provideRetrofit(
-        okHttpClient: OkHttpClient,
+        retrofitBuilder: Retrofit.Builder,
         @Named("baseUrl") baseUrl: String
     ): Retrofit =
-        Retrofit
-            .Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
+        retrofitBuilder.baseUrl(baseUrl).build()
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+    fun provideApiService(retrofit: Retrofit): ApiService =
+        retrofit.create(ApiService::class.java)
 
     @Provides
     @Singleton

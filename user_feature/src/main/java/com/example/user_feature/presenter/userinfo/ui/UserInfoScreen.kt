@@ -1,5 +1,6 @@
 package com.example.user_feature.presenter.userinfo.ui
 
+import UserInfo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize

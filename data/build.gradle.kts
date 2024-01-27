@@ -33,10 +33,18 @@ android {
 
 dependencies {
 
+    implementation(project(Modules.commonCore))
+
     // Dagger with hilt
     implementation(Libraries.hiltAndroid)
     kapt(Libraries.hiltAndroidCompiler)
 
     implementation(project(Modules.network))
     api(project(Modules.domain))
+
+    // test libraries
+    testImplementation(Libraries.junit)
+    testImplementation(Libraries.coroutineTest)
+    testImplementation(Libraries.mockk)
+    testImplementation(Libraries.gson)
 }

@@ -3,4 +3,5 @@
     <string name="content_description_back_text">Back</string>
     <string name="default_error">Something went wrong</string>
     <string name="error_title_text">Error</string>
+    <string name="ok_text">OK</string>
 </resources>

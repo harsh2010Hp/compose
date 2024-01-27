@@ -1,15 +1,15 @@
 package com.example.domain.model
 
 class UserInfo(
-    val name: String? = null,
-    val email: String? = null,
-    val username: String? = null,
-    val address: Address? = null
+    val name: String?,
+    val email: String?,
+    val username: String?,
+    val address: Address?
 ) {
 
     data class Address(
-        val zipcode: String? = null,
-        val city: String? = null,
-        val street: String? = null
+        val zipcode: String?,
+        val city: String?,
+        val street: String?
     )
 }

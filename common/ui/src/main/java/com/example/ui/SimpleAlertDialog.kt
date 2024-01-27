@@ -4,6 +4,7 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun SimpleAlertDialog(title: String, message: String, onDismiss: () -> Unit) {
@@ -16,7 +17,7 @@ fun SimpleAlertDialog(title: String, message: String, onDismiss: () -> Unit) {
             Button(
                 onClick = onDismiss
             ) {
-                Text("OK")
+                Text(stringResource(R.string.ok_text))
             }
         }
     )
