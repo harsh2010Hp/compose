@@ -17,12 +17,21 @@ fun UserFlowNavigation() {
     MaterialTheme {
         val navController = rememberNavController()
         NavHost(navController = navController, startDestination = Route.HomeScreen.route) {
-            composable(Route.HomeScreen.route) { UserContentScreen(navController = navController) }
+            composable(Route.HomeScreen.route) {
+                UserContentScreen {
+                    navController.navigate(
+                        Route.UserInfoScreen.route.plus("/")
+                            .plus(it)
+                    )
+                }
+            }
             composable(
                 Route.UserInfoScreen.route.plus("/{${Constants.userId}}"),
                 arguments = listOf(navArgument(Constants.userId) { type = NavType.StringType })
             ) {
-                UserInfoContentScreen(navController)
+                UserInfoContentScreen {
+                    navController.popBackStack()
+                }
             }
         }
     }

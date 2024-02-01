@@ -9,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.ui.ShowAlert
 import com.example.ui.ShowLoader
 import com.example.ui.Topbar
@@ -20,7 +19,7 @@ import com.example.userfeature.presenter.userinfo.intent.UserInfoIntent
 import com.example.userfeature.presenter.userinfo.state.UserInfoUIState
 
 @Composable
-internal fun UserInfoContentScreen(navController: NavController) {
+internal fun UserInfoContentScreen(onBackPressed: () -> Unit) {
 
     val userInfoViewModel = hiltViewModel<UserInfoViewModel>()
     val userInfoState by userInfoViewModel.userInfoState.collectAsState()
@@ -28,7 +27,7 @@ internal fun UserInfoContentScreen(navController: NavController) {
 
     LaunchedEffect(key1 = effect) {
         if (effect is UserInfoEffect.BackPressEffect.BackPressed) {
-            navController.popBackStack()
+            onBackPressed()
         }
     }
 
