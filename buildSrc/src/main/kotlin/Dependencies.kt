@@ -34,5 +34,5 @@ object Modules {
     const val data = ":data"
     const val domain = ":domain"
     const val network = ":network"
-    const val userFeature = ":user_feature"
+    const val userFeature = ":userfeature"
 }

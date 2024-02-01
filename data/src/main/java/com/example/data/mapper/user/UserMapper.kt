@@ -6,9 +6,15 @@ import com.example.network.dto.UserDto
 
 class UserMapper : Mapper<List<UserDto?>, List<User>> {
     override fun map(usersDto: List<UserDto?>): List<User> {
-        return usersDto.map {
+        return usersDto.mapNotNull(::mapUserDtoToUser)
+    }
+
+    private fun mapUserDtoToUser(userDto: UserDto?): User? {
+        return userDto?.let {
             User(
-                it?.id, it?.name, it?.email
+                id = it.id.orEmpty(),
+                name = it.name.orEmpty(),
+                email = it.email.orEmpty()
             )
         }
     }

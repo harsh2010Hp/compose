@@ -1,6 +1,7 @@
 package com.example.core.logs
 
 import com.example.core.BuildConfig
+import com.example.core.utils.Constants.DATE_FORMAT
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -15,16 +16,16 @@ interface LoggerDelegate {
     fun error(message: String)
 }
 
-private const val TAG = "Lloyd App"
+private const val LOGGER_NAME = "MyAppLogger"
 
-private class LoggerUtils : LoggerDelegate {
-    private val logger = Logger.getLogger("MyAppLogger")
+private class LoggerUtils(private val tag: String?) : LoggerDelegate {
+    private val logger = Logger.getLogger(LOGGER_NAME)
 
     private fun log(level: Level, message: String) {
         if (BuildConfig.DEBUG) {
             val timestamp =
-                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
-            logger.log(level, "[$timestamp][$TAG]: $message")
+                SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(Date())
+            logger.log(level, "[$timestamp][$tag]: $message")
         }
     }
 
@@ -45,8 +46,8 @@ private class LoggerUtils : LoggerDelegate {
     }
 }
 
-class LoggerDelegateProvider {
+class LoggerDelegateProvider(private val tag: String) {
     operator fun getValue(thisRef: Any?, property: KProperty<*>): LoggerDelegate {
-        return LoggerUtils()
+        return LoggerUtils(tag)
     }
 }

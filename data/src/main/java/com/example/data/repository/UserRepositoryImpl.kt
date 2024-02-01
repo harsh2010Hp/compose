@@ -1,8 +1,6 @@
 package com.example.data.repository
 
 import com.example.core.Response
-import com.example.core.exception.handleExceptions
-import com.example.core.logs.LoggerDelegateProvider
 import com.example.core.safeApiCall
 import com.example.data.mapper.user.UserMapper
 import com.example.data.mapper.userinfo.UserInfoMapper
@@ -25,33 +23,15 @@ class UserRepositoryImpl @Inject constructor(
     private val userInfoMapper: UserInfoMapper,
 ) : UserRepository {
 
-    private val logger by LoggerDelegateProvider()
+    private val tag = javaClass.name
     override suspend fun getUsers(): Flow<Response<List<User>>> =
         flow {
-            emit(safeApiCall {
-                val response = api.getUsers()
-                logger.info("Response is $response")
-                userMapper.map(response)
-            }.also { result ->
-                if (result is Response.Error) {
-                    logger.error("Error is $result")
-                    result.exception?.handleExceptions()
-                }
-            })
+            emit(safeApiCall(tag) { api.getUsers().let(userMapper::map) })
         }.flowOn(ioDispatcher)
 
     override suspend fun getUserInfo(userId: String?): Flow<Response<UserInfo>> =
         flow {
-            emit(safeApiCall {
-                val response = api.getUserInfo(userId)
-                logger.info("Response is $response")
-                userInfoMapper.map(response)
-            }.also { result ->
-                if (result is Response.Error) {
-                    logger.error("Error is $result")
-                    result.exception?.handleExceptions()
-                }
-            })
+            emit(safeApiCall(tag) { api.getUserInfo(userId).let(userInfoMapper::map) })
         }.flowOn(ioDispatcher)
 }
 

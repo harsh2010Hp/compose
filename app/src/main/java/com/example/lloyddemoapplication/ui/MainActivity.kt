@@ -5,7 +5,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import com.example.core.analytics.Analytics
 import com.example.core.analytics.AnalyticsImpl
-import com.example.user_feature.presenter.UserFlowNavigation
+import com.example.userfeature.presenter.UserFlowNavigation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

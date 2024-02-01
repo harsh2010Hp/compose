@@ -27,6 +27,9 @@ class GetUserInfoUseCaseTest {
     @MockK
     private lateinit var userRepository: UserRepository
 
+    private val testUserId = "1"
+    private val fileName = "UserInfoTestData.json"
+
     @Before
     fun setup() {
         MockKAnnotations.init(this)
@@ -36,21 +39,18 @@ class GetUserInfoUseCaseTest {
     @Test
     fun `Given users available, When getUserInfoUseCase invoked, Then return success response`() =
         runTest {
-            // Given
             val users = readUsersInfoFromFile()
-            coEvery { userRepository.getUserInfo("123") } returns flowOf(Response.Success(users))
+            coEvery { userRepository.getUserInfo(testUserId) } returns flowOf(Response.Success(users))
 
             val getUserInfoUseCase = GetUserInfoUseCase(userRepository)
 
-            // When
-            val response = getUserInfoUseCase("123").toList()
+            val response = getUserInfoUseCase(testUserId).toList()
 
-            // Then
             assertEquals(Response.Success(users).data?.name, response.first().data?.name)
         }
 
     private fun readUsersInfoFromFile(): UserInfo {
-        val jsonFile = File(javaClass.classLoader.getResource("UserInfoTestData.json")!!.file)
+        val jsonFile = File(javaClass.classLoader?.getResource(fileName)!!.file)
         val jsonString = jsonFile.readText()
         val listType: Type = object : TypeToken<UserInfo>() {}.type
         return Gson().fromJson(jsonString, listType)

@@ -29,9 +29,15 @@ import java.lang.reflect.Type
 class UserRepositoryImplTest {
 
     private lateinit var userRepository: UserRepository
+
     private lateinit var apiService: ApiService
     private lateinit var userMapper: UserMapper
     private lateinit var userInfoMapper: UserInfoMapper
+
+    private val testUserId = "1"
+    private val networkErrorMessage = "Network error"
+    private val userTestDataFileName = "UserTestData.json"
+    private val userInfoTestDataFileName = "UserInfoTestData.json"
 
     @Before
     fun setUp() {
@@ -45,18 +51,14 @@ class UserRepositoryImplTest {
     @Test
     fun `Given successful getUsers API call, When getUsers is invoked, Then it should return list of users`() =
         runTest {
-            // Arrange
             val users = readUsersFromFile()
-            val expectedUsers = users.map { User(it.id, it.name, it.email) }
+            val expectedUsers = users.map { User(it.id!!, it.name!!, it.email!!) }
 
-            // Given
             coEvery { apiService.getUsers() } returns users
             every { userMapper.map(users) } returns expectedUsers
 
-            // When
             val result = userRepository.getUsers().toList()
 
-            // Then
             assertEquals(1, result.size)
             assertEquals(expectedUsers, (result[0] as Response.Success).data)
         }
@@ -64,16 +66,12 @@ class UserRepositoryImplTest {
     @Test
     fun `Given a network error in getUsers API call, When getUsers is invoked, Then it should handle the error`() =
         runTest {
-            // Arrange
-            val expectedException = IOException("Network error")
+            val expectedException = IOException(networkErrorMessage)
 
-            // Given
             coEvery { apiService.getUsers() } throws expectedException
 
-            // When
             val result = userRepository.getUsers().toList()
 
-            // Then
             assert(result.size == 1)
             val responseError = result[0] as Response.Error
             assertEquals(expectedException, responseError.exception)
@@ -82,32 +80,26 @@ class UserRepositoryImplTest {
     @Test
     fun `Given successful getUserInfo API call, When getUserInfo is invoked, Then it should return user info`() =
         runTest {
-            // Arrange
             val userInfo = readUsersInfoFromFile()
             val expectedUserInfo = UserInfo(
-                name = userInfo.name,
-                email = userInfo.email,
-                username = userInfo.username,
-                address = userInfo.address?.let { addressDto ->
+                name = userInfo.name!!,
+                email = userInfo.email!!,
+                username = userInfo.username!!,
+                address = userInfo.address!!.run {
                     UserInfo.Address(
-                        zipcode = addressDto.zipcode,
-                        city = addressDto.city,
-                        street = addressDto.street
+                        zipcode = zipcode!!,
+                        city = city!!,
+                        street = street!!
                     )
                 }
             )
 
-            // Given
-            coEvery { apiService.getUserInfo("1") } returns userInfo
+            coEvery { apiService.getUserInfo(testUserId) } returns userInfo
             every { userInfoMapper.map(userInfo) } returns expectedUserInfo
 
-            // When
-            val flow = userRepository.getUserInfo("1")
+            val flow = userRepository.getUserInfo(testUserId)
 
-            // Then
             flow.collect { response ->
-                // Assert the initial loading state if needed
-
                 // Assert the success state
                 assertTrue(response is Response.Success)
 
@@ -120,17 +112,12 @@ class UserRepositoryImplTest {
     @Test
     fun `Given a network error in getUserInfo API call, When getUserInfo is invoked, Then it should handle the error`() =
         runTest {
-            // Arrange
-            val testData = readUsersInfoFromFile()
-            val expectedException = IOException("Network error")
+            val expectedException = IOException(networkErrorMessage)
 
-            // Given
-            coEvery { apiService.getUserInfo("1") } throws expectedException
+            coEvery { apiService.getUserInfo(testUserId) } throws expectedException
 
-            // When
-            val result = userRepository.getUserInfo("1").toList()
+            val result = userRepository.getUserInfo(testUserId).toList()
 
-            // Then
             assert(result.size == 1)
             val responseError = result[0] as Response.Error
             assertEquals(expectedException, responseError.exception)
@@ -138,14 +125,14 @@ class UserRepositoryImplTest {
 
 
     private fun readUsersFromFile(): List<UserDto> {
-        val jsonFile = File(javaClass.classLoader.getResource("UserTestData.json")!!.file)
+        val jsonFile = File(javaClass.classLoader.getResource(userTestDataFileName)!!.file)
         val jsonString = jsonFile.readText()
         val listType: Type = object : TypeToken<List<UserDto>>() {}.type
         return Gson().fromJson(jsonString, listType)
     }
 
     private fun readUsersInfoFromFile(): UserInfoDto {
-        val jsonFile = File(javaClass.classLoader.getResource("UserInfoTestData.json")!!.file)
+        val jsonFile = File(javaClass.classLoader.getResource(userInfoTestDataFileName)!!.file)
         val jsonString = jsonFile.readText()
         val listType: Type = object : TypeToken<UserInfoDto>() {}.type
         return Gson().fromJson(jsonString, listType)

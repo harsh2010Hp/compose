@@ -3,8 +3,8 @@ package com.example.core.analytics
 import com.example.core.logs.LoggerDelegateProvider
 
 class AnalyticsImpl : Analytics {
-
-    private val logger by LoggerDelegateProvider()
+    private val tag = javaClass.name
+    private val logger by LoggerDelegateProvider(tag)
 
     override fun setScreenAnalytics(className: String?) {
         // To call set screen analytics
