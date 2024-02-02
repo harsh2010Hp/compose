@@ -1,44 +1,53 @@
-package com.example.data.mapper.userinfo
-
+import com.example.data.mapper.userinfo.UserInfoMapper
 import com.example.domain.model.UserInfo
 import com.example.network.dto.UserInfoDto
-import com.google.gson.Gson
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
-import java.io.File
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
 
-class UserInfoMapperTest {
+@RunWith(Parameterized::class)
+class UserInfoMapperTest(
+    private val userInfoDto: UserInfoDto,
+    private val expectedName: String,
+    private val expectedEmail: String,
+    private val expectedUsername: String,
+    private val expectedZipcode: String,
+    private val expectedCity: String,
+    private val expectedStreet: String
+) {
 
-    private val testDataFileName = "UserInfoTestData.json"
+    companion object {
+        @JvmStatic
+        @Parameterized.Parameters
+        fun data(): Collection<Array<Any>> {
+            return listOf(
+                arrayOf(
+                    UserInfoDto(),
+                    "Leanne Graham",
+                    "Sincere@april.biz",
+                    "Bret",
+                    "92998-3874",
+                    "Gwenborough",
+                    "Kulas Light"
+                )
+            )
+        }
+    }
 
-    private val expectedName = "Leanne Graham"
-    private val expectedEmail = "Sincere@april.biz"
-    private val expectedUsername = "Bret"
-    private val expectedZipcode = "92998-3874"
-    private val expectedCity = "Gwenborough"
-    private val expectedStreet = "Kulas Light"
+    private lateinit var userInfoMapper: UserInfoMapper
+
+    @Before
+    fun setUp() {
+        userInfoMapper = mockk()
+        every { userInfoMapper.map(userInfoDto) } returns createExpectedUserInfo()
+    }
 
     @Test
     fun `Given a UserInfoDto, When map is called, Then it should convert to UserInfo`() {
-        val userInfoDto = readUsersInfoFromFile()
-        val expectedUserInfo = UserInfo(
-            name = expectedName,
-            email = expectedEmail,
-            username = expectedUsername,
-            address = UserInfo.Address(
-                zipcode = expectedZipcode,
-                city = expectedCity,
-                street = expectedStreet
-            )
-        )
-
-        // Mocking the UserInfoMapper
-        val userInfoMapper = mockk<UserInfoMapper>()
-
-        every { userInfoMapper.map(userInfoDto) } returns expectedUserInfo
-
         val resultUserInfo = userInfoMapper.map(userInfoDto)
 
         assertEquals(expectedName, resultUserInfo.name)
@@ -51,9 +60,16 @@ class UserInfoMapperTest {
         assertEquals(expectedStreet, address.street)
     }
 
-    private fun readUsersInfoFromFile(): UserInfoDto {
-        val jsonFile = File(javaClass.classLoader?.getResource(testDataFileName)!!.file)
-        val jsonString = jsonFile.readText()
-        return Gson().fromJson(jsonString, UserInfoDto::class.java)
+    private fun createExpectedUserInfo(): UserInfo {
+        return UserInfo(
+            name = expectedName,
+            email = expectedEmail,
+            username = expectedUsername,
+            address = UserInfo.Address(
+                zipcode = expectedZipcode,
+                city = expectedCity,
+                street = expectedStreet
+            )
+        )
     }
 }

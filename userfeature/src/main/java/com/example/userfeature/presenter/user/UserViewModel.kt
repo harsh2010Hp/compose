@@ -37,10 +37,16 @@ internal class UserViewModel @Inject constructor(
 
     private fun loadUsers() {
         viewModelScope.launch {
+            updateLoadingState(true)
             getUsersUseCase().collect { result ->
+                updateLoadingState(false)
                 handleResult(result)
             }
         }
+    }
+
+    private fun updateLoadingState(loadingState: Boolean) {
+        _userState.value = UserUIState.Loading(loadingState)
     }
 
     private fun handleResult(result: Response<List<User>>) {

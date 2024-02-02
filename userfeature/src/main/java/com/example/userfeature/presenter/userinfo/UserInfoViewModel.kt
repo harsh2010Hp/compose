@@ -40,10 +40,16 @@ internal class UserInfoViewModel @Inject constructor(
 
     private fun fetchUserInfo(userId: String?) {
         viewModelScope.launch {
+            updateLoadingState(true)
             getUserInfoUseCase(userId).collect { response ->
+                updateLoadingState(false)
                 handleUserInfoResult(response)
             }
         }
+    }
+
+    private fun updateLoadingState(loadingState: Boolean) {
+        _userInfoState.value = UserInfoUIState.Loading(loadingState)
     }
 
     private fun handleUserInfoResult(response: Response<UserInfo>) {
