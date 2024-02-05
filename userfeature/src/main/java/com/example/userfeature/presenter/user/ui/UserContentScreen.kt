@@ -18,36 +18,42 @@ import com.example.userfeature.presenter.user.state.UserUIState
 @Composable
 internal fun UserContentScreen(navigateToUserInfoScreen: (id: String?) -> Unit) {
     val userViewModel: UserViewModel = hiltViewModel()
-    val userState by userViewModel.userState.collectAsState()
+    val viewState by userViewModel.userState.collectAsState()
     val effect by userViewModel.effect.collectAsState(initial = null)
 
-    if (effect is UserEffect.NavigationEffect.NavigateUserInfoScreen) {
-        navigateToUserInfoScreen(
-            (effect as? UserEffect.NavigationEffect.
-            NavigateUserInfoScreen)?.userId
-        )
-    }
+    HandleEffect(effect, navigateToUserInfoScreen)
 
     Column {
         Topbar(title = stringResource(R.string.home_screen_title))
 
-        when (userState) {
+        when (viewState) {
             is UserUIState.Loading -> ShowLoader()
             is UserUIState.ShowContent -> {
-                val users = (userState as UserUIState.ShowContent).users
+                val users = (viewState as UserUIState.ShowContent).users
                 UserList(users) { user ->
                     userViewModel.processIntent(UserIntent.UIIntent.ListItemClicked(user))
                 }
             }
 
             is UserUIState.Error -> {
-                val errorMessage = (userState as UserUIState.Error).errorMessage
-                val showMessage = (userState as UserUIState.Error).showMessage
+                val errorMessage = (viewState as UserUIState.Error).errorMessage
+                val showMessage = (viewState as UserUIState.Error).showMessage
                 ShowUserErrorDialog(showMessage, errorMessage) {
                     userViewModel.processIntent(UserIntent.UIIntent.DialogDismissClicked)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun HandleEffect(effect: UserEffect?, navigateToUserInfoScreen: (id: String?) -> Unit) {
+    when (effect) {
+        is UserEffect.NavigationEffect.NavigateUserInfoScreen -> {
+            navigateToUserInfoScreen(effect.userId)
+        }
+
+        else -> {}
     }
 }
 

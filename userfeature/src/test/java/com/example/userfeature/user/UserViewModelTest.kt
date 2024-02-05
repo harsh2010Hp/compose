@@ -13,7 +13,6 @@ import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -32,9 +31,6 @@ class UserViewModelTest {
     private lateinit var getUsersUseCase: GetUserUseCase
     private lateinit var userViewModel: UserViewModel
 
-    private val errorMessage = "Error message"
-    private val fileName = "UserTestData.json"
-
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
@@ -48,26 +44,20 @@ class UserViewModelTest {
         coEvery { getUsersUseCase() } returns flowOf(Response.Success(users))
 
         userViewModel.processIntent(UserIntent.LoadUsers)
-        val job = launch {
-            val userState = userViewModel.userState
-            assert(userState.value is UserUIState.ShowContent)
-            assert((userViewModel.userState.value as UserUIState.ShowContent).users == users)
-        }
-        job.cancel()
+        val userState = userViewModel.userState.value
+        assert(userState is UserUIState.ShowContent)
+        assert((userViewModel.userState.value as UserUIState.ShowContent).users == users)
     }
 
     @Test
     fun `Given user list, When loading users, Then error state is emitted`() = runTest {
-        coEvery { getUsersUseCase() } returns flowOf(Response.Error(Exception(errorMessage)))
+        coEvery { getUsersUseCase() } returns flowOf(Response.Error(Exception(ERROR_MESSAGE)))
 
         userViewModel.processIntent(UserIntent.LoadUsers)
 
-        val job = launch {
-            val userState = userViewModel.userState
-            assert(userState.value is UserUIState.Error)
-            assert((userViewModel.userState.value as UserUIState.Error).showMessage)
-        }
-        job.cancel()
+        val userState = userViewModel.userState.value
+        assert(userState is UserUIState.Error)
+        assert((userViewModel.userState.value as UserUIState.Error).showMessage)
     }
 
     @Test
@@ -76,7 +66,7 @@ class UserViewModelTest {
             coEvery { getUsersUseCase() } returns flowOf(
                 Response.Error(
                     Exception(
-                        errorMessage
+                        ERROR_MESSAGE
                     )
                 )
             )
@@ -89,9 +79,14 @@ class UserViewModelTest {
         }
 
     private fun readUsersFromFile(): List<User> {
-        val jsonFile = File(javaClass.classLoader?.getResource(fileName)!!.file)
+        val jsonFile = File(javaClass.classLoader?.getResource(FILE_NAME)!!.file)
         val jsonString = jsonFile.readText()
         val listType: Type = object : TypeToken<List<User>>() {}.type
         return Gson().fromJson(jsonString, listType)
+    }
+
+    private companion object {
+        private const val ERROR_MESSAGE = "Error message"
+        private const val FILE_NAME = "UserTestData.json"
     }
 }

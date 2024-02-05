@@ -40,17 +40,11 @@ class UserInfoViewModelTest {
 
     private lateinit var userInfoViewModel: UserInfoViewModel
 
-    private val userId = "1"
-    private val errorMessage = "Error message"
-    private val errorValue = "1"
-    private val fileName = "UserInfoTestData.json"
-
-
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        savedStateHandle = SavedStateHandle(mapOf(Constants.userId to errorValue))
+        savedStateHandle = SavedStateHandle(mapOf(Constants.userId to Companion.ERROR_VALUE))
         userInfoViewModel = UserInfoViewModel(getUserInfoUseCase, savedStateHandle)
     }
 
@@ -58,7 +52,11 @@ class UserInfoViewModelTest {
     fun `Given user ID, When fetching user info, Then success state is emitted`() =
         runTest {
             val userInfo = readUsersInfoFromFile()
-            coEvery { getUserInfoUseCase(userId) } returns flowOf(Response.Success(userInfo))
+            coEvery { getUserInfoUseCase(TEST_USER_ID) } returns flowOf(
+                Response.Success(
+                    userInfo
+                )
+            )
 
             userInfoViewModel.processIntent(UserInfoIntent.FetchUserInfo)
 
@@ -69,25 +67,29 @@ class UserInfoViewModelTest {
 
     @Test
     fun `Given user ID, When fetching user info, Then error state is emitted`() = runTest {
-        coEvery { getUserInfoUseCase(userId) } returns flowOf(Response.Error(Throwable(errorMessage)))
+        coEvery { getUserInfoUseCase(TEST_USER_ID) } returns flowOf(
+            Response.Error(
+                Throwable(
+                    ERROR_MESSAGE
+                )
+            )
+        )
 
         userInfoViewModel.processIntent(UserInfoIntent.FetchUserInfo)
 
-        val job = launch {
-            val userInfoState = userInfoViewModel.userInfoState
-            assert(userInfoState.value is UserInfoUIState.Error)
-            assert((userInfoState.value as UserInfoUIState.Error).showMessage)
-        }
-        job.cancel()
+        val userInfoState = userInfoViewModel.userInfoState.value
+        assert(userInfoState is UserInfoUIState.Error)
+        assert((userInfoState as UserInfoUIState.Error).showMessage)
+
     }
 
     @Test
     fun `Given DialogDismissClicked intent, When dialog is dismissed, Then emit null error message`() =
         runTest {
-            coEvery { getUserInfoUseCase(userId) } returns flowOf(
+            coEvery { getUserInfoUseCase(TEST_USER_ID) } returns flowOf(
                 Response.Error(
                     Exception(
-                        errorMessage
+                        ERROR_MESSAGE
                     )
                 )
             )
@@ -118,8 +120,15 @@ class UserInfoViewModelTest {
         }
 
     private fun readUsersInfoFromFile(): UserInfo {
-        val jsonFile = File(javaClass.classLoader?.getResource(fileName)!!.file)
+        val jsonFile = File(javaClass.classLoader?.getResource(FILE_NAME)!!.file)
         val jsonString = jsonFile.readText()
         return Gson().fromJson(jsonString, UserInfo::class.java)
+    }
+
+    private companion object {
+        private const val TEST_USER_ID = "1"
+        private const val ERROR_MESSAGE = "Error message"
+        private const val ERROR_VALUE = "1"
+        private const val FILE_NAME = "UserInfoTestData.json"
     }
 }

@@ -20,7 +20,7 @@ class UserInfoMapperTest(
     private val expectedStreet: String
 ) {
 
-    companion object {
+    private companion object {
         @JvmStatic
         @Parameterized.Parameters
         fun data(): Collection<Array<Any>> {
@@ -39,6 +39,7 @@ class UserInfoMapperTest(
     }
 
     private lateinit var userInfoMapper: UserInfoMapper
+
 
     @Before
     fun setUp() {
