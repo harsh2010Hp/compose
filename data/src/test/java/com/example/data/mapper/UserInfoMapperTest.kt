@@ -1,4 +1,5 @@
-import com.example.data.mapper.userinfo.UserInfoMapper
+package com.example.data.mapper
+
 import com.example.domain.model.UserInfo
 import com.example.network.dto.UserInfoDto
 import io.mockk.every

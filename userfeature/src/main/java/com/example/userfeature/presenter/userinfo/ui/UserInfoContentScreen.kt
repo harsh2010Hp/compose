@@ -9,7 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.ui.ShowAlert
+import com.example.ui.ErrorView
 import com.example.ui.ShowLoader
 import com.example.ui.Topbar
 import com.example.userfeature.R
@@ -26,9 +26,7 @@ internal fun UserInfoContentScreen(onBackPressed: () -> Unit) {
     val effect by userInfoViewModel.effect.collectAsState(initial = null)
 
     LaunchedEffect(key1 = effect) {
-        if (effect is UserInfoEffect.BackPressEffect.BackPressed) {
-            onBackPressed()
-        }
+        handleEffect(effect, onBackPressed)
     }
 
     Column(
@@ -42,14 +40,26 @@ internal fun UserInfoContentScreen(onBackPressed: () -> Unit) {
 
         when (userInfoState) {
             is UserInfoUIState.Loading -> ShowLoader()
-            is UserInfoUIState.ShowContent -> UserInfoScreen((userInfoState as UserInfoUIState.ShowContent).userInfo)
+            is UserInfoUIState.ShowContent -> UserInfoScreen(
+                (userInfoState as
+                        UserInfoUIState.ShowContent).userInfo
+            )
 
-            is UserInfoUIState.Error -> if ((userInfoState as UserInfoUIState.Error).showMessage) {
-                ShowAlert((userInfoState as UserInfoUIState.Error).errorMessage) {
-                    userInfoViewModel.processIntent(UserInfoIntent.UIIntent.DismissErrorDialog)
-                }
-            }
+            is UserInfoUIState.Error ->
+                ErrorView(
+                    modifier = Modifier,
+                    errorMsg = (userInfoState as UserInfoUIState.Error).errorMessage
+                )
         }
+    }
+}
+
+fun handleEffect(
+    effect: UserInfoEffect?,
+    onBackPressed: () -> Unit
+) {
+    if (effect is UserInfoEffect.BackPressEffect.BackPressed) {
+        onBackPressed()
     }
 }
 

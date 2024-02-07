@@ -1,4 +1,4 @@
-package com.example.data.mapper.userinfo
+package com.example.data.mapper
 
 import com.example.core.mapper.Mapper
 import com.example.domain.model.UserInfo

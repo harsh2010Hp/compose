@@ -7,7 +7,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -30,7 +29,7 @@ class GetUserUseCaseTest {
     @Test
     fun `Given users available, When getUserUseCase invoked, Then verify repository called`() =
         runTest {
-            coEvery { userRepository.getUsers() } returns flowOf(Response.Loading(true))
+            coEvery { userRepository.getUsers() } returns Response.Loading(true)
 
             GetUserUseCase(userRepository).invoke()
 

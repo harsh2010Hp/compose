@@ -1,12 +1,11 @@
 package com.example.domain.usecase.userinfo
 
 import com.example.core.Response
-import com.example.domain.repository.UserRepository
+import com.example.domain.repository.UserInfoRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -17,8 +16,7 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class GetUserInfoUseCaseTest {
 
-    @MockK
-    private lateinit var userRepository: UserRepository
+    private lateinit var userInfoRepository: UserInfoRepository
 
     private companion object {
 
@@ -34,15 +32,15 @@ class GetUserInfoUseCaseTest {
     @Test
     fun `Given query userId, When getUserInfoUseCase invoked, Then verify repository called`() =
         runTest {
-            coEvery { userRepository.getUserInfo(TEST_USER_ID) } returns flowOf(
-                Response.Loading(
-                    true
-                )
-            )
+            coEvery { userInfoRepository.getUserInfo(TEST_USER_ID) } returns
+                    Response.Loading(
+                        true
+                    )
 
-            GetUserInfoUseCase(userRepository).invoke(TEST_USER_ID)
+
+            GetUserInfoUseCase(userInfoRepository).invoke(TEST_USER_ID)
             coEvery {
-                userRepository.getUserInfo(TEST_USER_ID)
+                userInfoRepository.getUserInfo(TEST_USER_ID)
             }
         }
 }

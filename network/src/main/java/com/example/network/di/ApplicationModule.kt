@@ -1,12 +1,12 @@
 package com.example.network.di
 
 import com.example.network.BuildConfig
+import com.example.network.coroutine.Dispatcher
 import com.example.network.service.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -14,6 +14,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlin.coroutines.CoroutineContext
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -62,5 +63,8 @@ object ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
+    fun provideDispatcher() = object : Dispatcher {
+        override val main: CoroutineContext = Dispatchers.Main
+        override val io: CoroutineContext = Dispatchers.IO
+    }
 }

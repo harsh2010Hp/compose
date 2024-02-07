@@ -2,11 +2,13 @@ package com.example.userfeature.presenter.user.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.ui.ShowAlert
+import com.example.ui.ErrorView
 import com.example.ui.ShowLoader
 import com.example.ui.Topbar
 import com.example.userfeature.R
@@ -21,13 +23,17 @@ internal fun UserContentScreen(navigateToUserInfoScreen: (id: String?) -> Unit) 
     val viewState by userViewModel.userState.collectAsState()
     val effect by userViewModel.effect.collectAsState(initial = null)
 
-    HandleEffect(effect, navigateToUserInfoScreen)
+    LaunchedEffect(key1 = effect) {
+        handleEffect(effect, navigateToUserInfoScreen)
+    }
 
     Column {
         Topbar(title = stringResource(R.string.home_screen_title))
-
         when (viewState) {
-            is UserUIState.Loading -> ShowLoader()
+            is UserUIState.Loading -> {
+                ShowLoader()
+            }
+
             is UserUIState.ShowContent -> {
                 val users = (viewState as UserUIState.ShowContent).users
                 UserList(users) { user ->
@@ -36,30 +42,20 @@ internal fun UserContentScreen(navigateToUserInfoScreen: (id: String?) -> Unit) 
             }
 
             is UserUIState.Error -> {
-                val errorMessage = (viewState as UserUIState.Error).errorMessage
-                val showMessage = (viewState as UserUIState.Error).showMessage
-                ShowUserErrorDialog(showMessage, errorMessage) {
-                    userViewModel.processIntent(UserIntent.UIIntent.DialogDismissClicked)
-                }
+                ErrorView(
+                    modifier = Modifier,
+                    errorMsg = (viewState as UserUIState.Error).errorMessage
+                )
             }
         }
     }
 }
 
-@Composable
-private fun HandleEffect(effect: UserEffect?, navigateToUserInfoScreen: (id: String?) -> Unit) {
-    when (effect) {
-        is UserEffect.NavigationEffect.NavigateUserInfoScreen -> {
-            navigateToUserInfoScreen(effect.userId)
-        }
-
-        else -> {}
-    }
-}
-
-@Composable
-private fun ShowUserErrorDialog(showMessage: Boolean, errorMessage: Int?, onDismiss: () -> Unit) {
-    if (showMessage) {
-        ShowAlert(errorMessage, onDismiss)
+private fun handleEffect(
+    effect: UserEffect?,
+    navigateToUserInfoScreen: (id: String?) -> Unit
+) {
+    if (effect is UserEffect.NavigationEffect.NavigateUserInfoScreen) {
+        navigateToUserInfoScreen(effect.userId)
     }
 }

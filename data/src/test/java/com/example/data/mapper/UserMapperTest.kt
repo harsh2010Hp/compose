@@ -1,4 +1,4 @@
-package com.example.data.mapper.user
+package com.example.data.mapper
 
 import com.example.domain.model.User
 import com.example.network.dto.UserDto

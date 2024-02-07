@@ -72,6 +72,7 @@ dependencies {
 
     implementation(project(Modules.commonCore))
     implementation(project(Modules.userFeature))
+    implementation(project(Modules.data))
 
     // Compose
     implementation(Libraries.hiltNavigationCompose)

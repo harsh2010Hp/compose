@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.core.Response
 import com.example.core.base.BaseViewModel
-import com.example.core.exception.handleExceptions
 import com.example.domain.model.UserInfo
 import com.example.domain.usecase.userinfo.GetUserInfoUseCase
 import com.example.userfeature.presenter.userinfo.effect.UserInfoEffect
@@ -33,18 +32,15 @@ internal class UserInfoViewModel @Inject constructor(
     override fun processIntent(intent: UserInfoIntent) {
         when (intent) {
             is UserInfoIntent.FetchUserInfo -> fetchUserInfo(savedStateHandle[Constants.userId])
-            is UserInfoIntent.UIIntent.DismissErrorDialog -> dismissErrorDialog()
             is UserInfoIntent.BackPressed.BackPressClicked -> navigateBack()
         }
     }
 
     private fun fetchUserInfo(userId: String?) {
+        updateLoadingState(true)
         viewModelScope.launch {
-            updateLoadingState(true)
-            getUserInfoUseCase(userId).collect { response ->
-                updateLoadingState(false)
-                handleUserInfoResult(response)
-            }
+            updateLoadingState(false)
+            handleUserInfoResult(getUserInfoUseCase(userId))
         }
     }
 
@@ -55,14 +51,8 @@ internal class UserInfoViewModel @Inject constructor(
     private fun handleUserInfoResult(response: Response<UserInfo>) {
         _userInfoState.value = when (response) {
             is Response.Success -> UserInfoUIState.ShowContent(response.data)
-            is Response.Error -> UserInfoUIState.Error(response.exception?.handleExceptions(), true)
+            is Response.Error -> UserInfoUIState.Error(response.exception?.localizedMessage)
             is Response.Loading -> UserInfoUIState.Loading(response.showLoading)
-        }
-    }
-
-    private fun dismissErrorDialog() {
-        viewModelScope.launch {
-            _userInfoState.value = UserInfoUIState.Error(showMessage = false)
         }
     }
 

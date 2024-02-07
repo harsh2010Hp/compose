@@ -40,7 +40,7 @@ dependencies {
     kapt(Libraries.hiltAndroidCompiler)
 
     implementation(project(Modules.network))
-    api(project(Modules.domain))
+    implementation(project(Modules.domain))
 
     // test libraries
     testImplementation(Libraries.junit)

@@ -3,7 +3,6 @@ package com.example.userfeature.presenter.user
 import androidx.lifecycle.viewModelScope
 import com.example.core.Response
 import com.example.core.base.BaseViewModel
-import com.example.core.exception.handleExceptions
 import com.example.domain.model.User
 import com.example.domain.usecase.user.GetUserUseCase
 import com.example.userfeature.presenter.user.effect.UserEffect
@@ -30,18 +29,15 @@ internal class UserViewModel @Inject constructor(
     override fun processIntent(intent: UserIntent) {
         when (intent) {
             is UserIntent.LoadUsers -> loadUsers()
-            is UserIntent.UIIntent.DialogDismissClicked -> dismissErrorDialog()
             is UserIntent.UIIntent.ListItemClicked -> navigateToUserInfoScreen(intent.userId)
         }
     }
 
     private fun loadUsers() {
+        updateLoadingState(true)
         viewModelScope.launch {
-            updateLoadingState(true)
-            getUsersUseCase().collect { result ->
-                updateLoadingState(false)
-                handleResult(result)
-            }
+            updateLoadingState(false)
+            handleResult(getUsersUseCase())
         }
     }
 
@@ -54,18 +50,11 @@ internal class UserViewModel @Inject constructor(
             when (result) {
                 is Response.Success -> UserUIState.ShowContent(users = result.data ?: emptyList())
                 is Response.Error -> UserUIState.Error(
-                    errorMessage = result.exception?.handleExceptions(),
-                    true
+                    result.exception?.localizedMessage
                 )
 
                 is Response.Loading -> UserUIState.Loading(result.showLoading)
             }
-    }
-
-    private fun dismissErrorDialog() {
-        viewModelScope.launch {
-            _userState.value = UserUIState.Error(showMessage = false)
-        }
     }
 
     private fun navigateToUserInfoScreen(userId: String?) {

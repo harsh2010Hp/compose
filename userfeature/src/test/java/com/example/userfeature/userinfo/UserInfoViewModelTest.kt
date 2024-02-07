@@ -13,12 +13,9 @@ import com.google.gson.Gson
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
-import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -49,14 +46,22 @@ class UserInfoViewModelTest {
     }
 
     @Test
+    fun `Given user id, When loading users, Then loading state is emitted`() = runTest {
+        coEvery { getUserInfoUseCase(TEST_USER_ID) } returns Response.Loading(true)
+
+        userInfoViewModel.processIntent(UserInfoIntent.FetchUserInfo)
+        val userState = userInfoViewModel.userInfoState.value
+        assert(userState is UserInfoUIState.Loading)
+    }
+
+    @Test
     fun `Given user ID, When fetching user info, Then success state is emitted`() =
         runTest {
             val userInfo = readUsersInfoFromFile()
-            coEvery { getUserInfoUseCase(TEST_USER_ID) } returns flowOf(
-                Response.Success(
-                    userInfo
-                )
-            )
+            coEvery { getUserInfoUseCase(TEST_USER_ID) } returns
+                    Response.Success(
+                        userInfo
+                    )
 
             userInfoViewModel.processIntent(UserInfoIntent.FetchUserInfo)
 
@@ -67,47 +72,25 @@ class UserInfoViewModelTest {
 
     @Test
     fun `Given user ID, When fetching user info, Then error state is emitted`() = runTest {
-        coEvery { getUserInfoUseCase(TEST_USER_ID) } returns flowOf(
-            Response.Error(
-                Throwable(
-                    ERROR_MESSAGE
+        coEvery { getUserInfoUseCase(TEST_USER_ID) } returns
+                Response.Error(
+                    Throwable(
+                        ERROR_MESSAGE
+                    )
                 )
-            )
-        )
 
         userInfoViewModel.processIntent(UserInfoIntent.FetchUserInfo)
 
         val userInfoState = userInfoViewModel.userInfoState.value
         assert(userInfoState is UserInfoUIState.Error)
-        assert((userInfoState as UserInfoUIState.Error).showMessage)
-
     }
-
-    @Test
-    fun `Given DialogDismissClicked intent, When dialog is dismissed, Then emit null error message`() =
-        runTest {
-            coEvery { getUserInfoUseCase(TEST_USER_ID) } returns flowOf(
-                Response.Error(
-                    Exception(
-                        ERROR_MESSAGE
-                    )
-                )
-            )
-
-            userInfoViewModel.processIntent(UserInfoIntent.UIIntent.DismissErrorDialog)
-
-            val userInfoState = userInfoViewModel.userInfoState
-            assert(userInfoState.value is UserInfoUIState.Error)
-            assertNull((userInfoState.value as UserInfoUIState.Error).errorMessage)
-        }
 
     @Test
     fun `Given UserInfoViewModel When back pressed Then navigate back`() =
         runTest {
             val userInfo = readUsersInfoFromFile()
-            coEvery { getUserInfoUseCase(any()) } returns flow {
-                emit(Response.Success(userInfo))
-            }
+            coEvery { getUserInfoUseCase(any()) } returns Response.Success(userInfo)
+
             val userInfoViewModel = UserInfoViewModel(getUserInfoUseCase, savedStateHandle)
 
             userInfoViewModel.processIntent(UserInfoIntent.BackPressed.BackPressClicked)

@@ -1,7 +1,7 @@
 package com.example.data.di
 
-import com.example.data.mapper.user.UserMapper
-import com.example.data.mapper.userinfo.UserInfoMapper
+import com.example.data.mapper.UserInfoMapper
+import com.example.data.mapper.UserMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,8 +11,8 @@ import dagger.hilt.android.components.ViewModelComponent
 @InstallIn(ViewModelComponent::class)
 class TransformModule {
     @Provides
-    fun provideUserMapper() = UserMapper()
+    fun provideUserMapper(): UserMapper = UserMapper()
 
     @Provides
-    fun provideUserInfoMapper() = UserInfoMapper()
+    fun provideUserInfoMapper(): UserInfoMapper = UserInfoMapper()
 }

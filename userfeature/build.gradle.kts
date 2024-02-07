@@ -53,7 +53,7 @@ dependencies {
 
     implementation(project(Modules.commonUI))
     implementation(project(Modules.commonCore))
-    implementation(project(Modules.data))
+    implementation(project(Modules.domain))
 
     // test libraries
     testImplementation(Libraries.junit)
