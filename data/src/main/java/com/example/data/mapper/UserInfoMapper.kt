@@ -1,6 +1,5 @@
 package com.example.data.mapper
 
-import com.example.core.mapper.Mapper
 import com.example.domain.model.UserInfo
 import com.example.network.dto.Address
 import com.example.network.dto.UserInfoDto
