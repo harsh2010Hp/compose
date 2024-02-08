@@ -4,7 +4,6 @@ import com.example.core.Response
 import com.example.domain.repository.UserInfoRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before

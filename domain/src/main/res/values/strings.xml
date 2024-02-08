@@ -1,13 +1,3 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="dismiss">Dismiss</string>
-    <string name="default_error">Something went wrong</string>
-    <string name="unknown_error">Unknown error</string>
-    <string name="error_internet_connection">Check your internet connection</string>
-    <string name="error_title_text">Error</string>
-    <string name="home_screen_title">Home Screen</string>
-    <string name="user_detail_screen">User Detail Screen</string>
 </resources>

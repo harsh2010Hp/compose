@@ -63,7 +63,6 @@ android {
 }
 
 dependencies {
-    implementation(Libraries.coreKtx)
     implementation(Libraries.appcompat)
 
     // Dagger with hilt
