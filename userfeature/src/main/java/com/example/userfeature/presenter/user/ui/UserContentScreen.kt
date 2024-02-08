@@ -3,11 +3,11 @@ package com.example.userfeature.presenter.user.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ui.ErrorView
 import com.example.ui.ShowLoader
 import com.example.ui.Topbar
@@ -20,8 +20,8 @@ import com.example.userfeature.presenter.user.state.UserUIState
 @Composable
 internal fun UserContentScreen(navigateToUserInfoScreen: (id: String?) -> Unit) {
     val userViewModel: UserViewModel = hiltViewModel()
-    val viewState by userViewModel.userState.collectAsState()
-    val effect by userViewModel.effect.collectAsState(initial = null)
+    val viewState by userViewModel.userState.collectAsStateWithLifecycle()
+    val effect by userViewModel.effect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(key1 = effect) {
         handleEffect(effect, navigateToUserInfoScreen)

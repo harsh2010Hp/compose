@@ -47,6 +47,9 @@ dependencies {
     implementation(Libraries.materialCompose)
     implementation(Libraries.hiltNavigationCompose)
 
+    // lifecycle compose
+    implementation(Libraries.lifeCycleRuntimeCompose)
+
     // Hilt
     implementation(Libraries.hiltAndroid)
     kapt(Libraries.hiltAndroidCompiler)

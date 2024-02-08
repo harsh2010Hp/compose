@@ -4,11 +4,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ui.ErrorView
 import com.example.ui.ShowLoader
 import com.example.ui.Topbar
@@ -22,8 +22,8 @@ import com.example.userfeature.presenter.userinfo.state.UserInfoUIState
 internal fun UserInfoContentScreen(onBackPressed: () -> Unit) {
 
     val userInfoViewModel = hiltViewModel<UserInfoViewModel>()
-    val userInfoState by userInfoViewModel.userInfoState.collectAsState()
-    val effect by userInfoViewModel.effect.collectAsState(initial = null)
+    val userInfoState by userInfoViewModel.userInfoState.collectAsStateWithLifecycle()
+    val effect by userInfoViewModel.effect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(key1 = effect) {
         handleEffect(effect, onBackPressed)
