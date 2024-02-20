@@ -1,11 +1,7 @@
 package com.example.core
 
-sealed class Response<out T>(
-    val data: T? = null,
-    val exception: Throwable? = null,
-    val showLoading: Boolean = false
-) {
-    class Success<T>(data: T) : Response<T>(data)
-    class Error<T>(exception: Throwable) : Response<T>(exception = exception)
-    class Loading<T>(showLoading: Boolean) : Response<T>(showLoading = showLoading)
+sealed interface Response<out T> {
+    data class Success<out T>(val data: T) : Response<T>
+    data class Error<T>(val exception: Throwable) : Response<T>
+    data class Loading<T>(val showLoading: Boolean) : Response<T>
 }

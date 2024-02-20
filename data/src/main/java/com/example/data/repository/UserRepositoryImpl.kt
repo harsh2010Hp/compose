@@ -19,7 +19,9 @@ class UserRepositoryImpl @Inject constructor(
 
     private val tag = javaClass.name
     override suspend fun getUsers(): Response<List<User>> = withContext(dispatcher.io) {
-        safeApiCall(tag) { userDataSource.getUsers().let(userMapper::map) }
+        safeApiCall(tag) {
+            userMapper.map(userDataSource.getUsers())
+        }
     }
 }
 

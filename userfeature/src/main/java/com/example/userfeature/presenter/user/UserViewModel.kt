@@ -48,9 +48,9 @@ internal class UserViewModel @Inject constructor(
     private fun handleResult(result: Response<List<User>>) {
         _userState.value =
             when (result) {
-                is Response.Success -> UserUIState.ShowContent(users = result.data ?: emptyList())
+                is Response.Success -> UserUIState.ShowContent(users = result.data)
                 is Response.Error -> UserUIState.Error(
-                    result.exception?.localizedMessage
+                    result.exception.localizedMessage
                 )
 
                 is Response.Loading -> UserUIState.Loading(result.showLoading)

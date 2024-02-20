@@ -20,7 +20,11 @@ class UserInfoRepositoryImpl @Inject constructor(
     private val tag = javaClass.name
     override suspend fun getUserInfo(userId: String?): Response<UserInfo> =
         withContext(dispatcher.io) {
-            safeApiCall(tag) { userInfoDataSource.getUserInfo(userId).let(userInfoMapper::map) }
+            safeApiCall(tag) {
+                userInfoMapper.map(
+                    userInfoDataSource.getUserInfo(userId)
+                )
+            }
         }
 }
 

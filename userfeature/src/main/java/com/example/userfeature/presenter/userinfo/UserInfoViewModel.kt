@@ -51,7 +51,7 @@ internal class UserInfoViewModel @Inject constructor(
     private fun handleUserInfoResult(response: Response<UserInfo>) {
         _userInfoState.value = when (response) {
             is Response.Success -> UserInfoUIState.ShowContent(response.data)
-            is Response.Error -> UserInfoUIState.Error(response.exception?.localizedMessage)
+            is Response.Error -> UserInfoUIState.Error(response.exception.localizedMessage)
             is Response.Loading -> UserInfoUIState.Loading(response.showLoading)
         }
     }
